@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# sambird.io
 
-## Getting Started
+[Sam Bird](https://sambird.io)'s personal site — Lead Cloud Engineer @ Lloyds Banking Group.
 
-First, run the development server:
+**Live:** https://sambird.io
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Stack
+
+- [Next.js 16](https://nextjs.org) (App Router) · React 19 · TypeScript
+- [Tailwind CSS v4](https://tailwindcss.com) · [Geist](https://vercel.com/font) · `next-themes` (dark mode)
+- Deployed as a standalone Docker image on [Fly.io](https://fly.io)
+
+## Structure
+
+```
+app/                 # routes, layout, metadata, OG image, sitemap, robots
+components/
+  sections/          # Hero · About · Experience · Skills · Contact
+  …                  # nav, footer, theme toggle, timeline item
+lib/content.ts       # ← all site copy (single source of truth)
+public/img/          # avatar + company logos
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Editing content
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Almost everything is data in **`lib/content.ts`** — `site` (name, role, bio, links),
+`experience[]`, and `skills[]`. The hero, page `<title>`, and OpenGraph metadata all
+derive from it, so a copy change is usually a one-file edit. See
+[`AGENTS.md`](./AGENTS.md) for the full content model, editorial rules, and the
+change → deploy workflow.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Local development
 
-## Learn More
+Requires Node 22 (see [`.nvmrc`](./.nvmrc)).
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm install
+npm run dev        # http://localhost:3000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Quality checks
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run lint       # eslint
+npx tsc --noEmit   # types
+npm run build      # production build (standalone output)
+```
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Hosted on Fly.io (app `sambird`). Deploy in place:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+fly deploy --ha=false -a sambird
+```
+
+Full deploy and custom-domain (DNS/cert) notes live in [`AGENTS.md`](./AGENTS.md).
+
+## License
+
+Source code is [MIT](./LICENSE). Personal content (bio, photo, written copy) and the
+third-party company logos in `public/img/` are **not** covered by the MIT license and
+remain © Sam Bird / their respective owners.
