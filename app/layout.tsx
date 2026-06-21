@@ -26,6 +26,19 @@ export const metadata: Metadata = {
   applicationName: site.name,
   authors: [{ name: site.name, url: site.url }],
   creator: site.name,
+  keywords: [
+    "Cloud Engineer",
+    "Platform Engineering",
+    "Data Engineering",
+    "Kubernetes",
+    "Terraform",
+    "Google Cloud",
+    "AWS",
+    "CI/CD",
+    "DevOps",
+    "Engineering Leadership",
+    "Sam Bird",
+  ],
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -43,6 +56,33 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: site.name,
+  url: site.url,
+  jobTitle: site.role,
+  worksFor: { "@type": "Organization", name: site.company },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Leeds",
+    addressCountry: "GB",
+  },
+  sameAs: [site.links.linkedin, site.links.github],
+  knowsAbout: [
+    "Cloud Engineering",
+    "Platform Engineering",
+    "Data Engineering",
+    "Kubernetes",
+    "Terraform",
+    "Google Cloud",
+    "Amazon Web Services",
+    "CI/CD",
+    "Infrastructure as Code",
+    "Python",
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -56,6 +96,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

@@ -1,0 +1,42 @@
+When you run `kubectl apply -f deployment.yaml`, the interesting part is what you *don't* see. A line returns in your terminal — `deployment.apps/web configured` — and a few seconds later there are pods running somewhere in a cluster. Between those two moments, several independent components do a surprising amount of work, none of it on your screen.
+
+I find Kubernetes much easier to operate once you can picture that work. So here's the short version of what actually happens, and a project I built to make it visible.
+
+## The request lands at the API server
+
+`kubectl` doesn't talk to your pods. It talks to one thing: the **API server**. Your YAML is validated, defaulted, and written to **etcd**, the cluster's consistent key-value store. At this point your Deployment "exists" — but nothing is running yet. All you've done is record desired state.
+
+This is the mental model that unlocks everything else: in Kubernetes, you declare what you want, and the rest of the system spends its life trying to make reality match.
+
+## Controllers reconcile the difference
+
+A **controller** is a loop. It watches the API server for a kind of object, compares desired state to observed state, and takes one step to close the gap. Then it does it again. Forever.
+
+Apply a Deployment and the Deployment controller notices it has no matching ReplicaSet, so it creates one. The ReplicaSet controller notices it has zero pods but wants three, so it creates three Pod objects. Still nothing is *running* — these are just records in etcd describing pods that ought to exist.
+
+```
+Deployment  ->  ReplicaSet  ->  Pods (desired)
+   want 3         want 3         3 unscheduled
+```
+
+Nothing here is magic. Each controller does one small, boring job, and the emergent behaviour is a system that heals itself.
+
+## The scheduler places the work
+
+Those new Pods have no node assigned. The **scheduler** watches for unscheduled pods, scores the available nodes against the pod's requirements — resource requests, affinity rules, taints — and binds each pod to the best node by writing that decision back to the API server.
+
+Only now does the **kubelet** on the chosen node see "a pod is assigned to me," pull the image, and ask the container runtime to start it. The pod goes `Running`. The kubelet reports status back up the chain, and your `kubectl get pods` finally shows what you were hoping for.
+
+## Watching it happen live
+
+Reading this is one thing; watching it is another. The reconciliation is fast and invisible, which is exactly why it's hard to teach and hard to debug under pressure.
+
+So I built [Inside the Kubernetes Cluster](/projects/inside-the-kubernetes-cluster) — a local-first dashboard that streams cluster state out of the control plane over Server-Sent Events and renders it in real time. You apply a manifest and watch the ReplicaSet appear, the scheduler place pods, and replicas converge to the number you asked for, all on one screen.
+
+It runs on a laptop against a [kind](https://kind.sigs.k8s.io/) cluster and is reliable enough to drive a live talk. Building it forced me to be precise about every step above — which is the real reason I built it.
+
+## Why this matters when things break
+
+Most production Kubernetes incidents make sense the moment you ask: *which controller is failing to reconcile, and why?* A Deployment stuck at two of three replicas is a scheduling problem (no node fits) or an image problem (kubelet can't start it) — not a mystery. The control-plane model turns "it's broken" into a small set of concrete questions.
+
+That's the whole trick. Kubernetes isn't a black box; it's a handful of loops, each doing one job, racing to make your desired state true.
