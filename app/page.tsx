@@ -1,17 +1,19 @@
 import { Hero } from "@/components/sections/hero";
-import { About } from "@/components/sections/about";
-import { Experience } from "@/components/sections/experience";
-import { Skills } from "@/components/sections/skills";
-import { Contact } from "@/components/sections/contact";
+import { Logos } from "@/components/sections/logos";
+import { Pillars } from "@/components/sections/pillars";
+import { FeaturedWork } from "@/components/sections/featured-work";
+import { LatestWriting } from "@/components/sections/latest-writing";
+import { HomeCta } from "@/components/sections/home-cta";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <About />
-      <Experience />
-      <Skills />
-      <Contact />
+      <Logos />
+      <Pillars />
+      <FeaturedWork />
+      <LatestWriting />
+      <HomeCta />
     </>
   );
 }

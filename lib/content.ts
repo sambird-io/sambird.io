@@ -1,30 +1,62 @@
 // Single source of truth for site copy.
-// Edit the TODO placeholders to fill in real content.
+// Editorial rule: every claim here must be true. No invented metrics, no TODO
+// in rendered values. Positioning is hands-on Cloud / Data / Platform engineering
+// (IC with a leadership dimension), not people-management.
 
 export const site = {
   name: "Sam Bird",
   role: "Lead Cloud Engineer",
   company: "Lloyds Banking Group",
   tagline:
-    "Cloud & DevOps engineering leader with 6+ years automating cloud-native workloads across financial services, public sector, and retail.",
-  bio: "I'm a Lead Cloud Engineer with over six years designing, automating, and operating cloud-native workloads across financial services, the public sector, and retail. AWS and Google Cloud certified, I bring deep expertise in DevOps practices, cloud infrastructure, and automation with tools like Terraform, Jenkins, and Python. I have a knack for turning manual, repetitive work into reliable automation, and I enjoy mentoring junior engineers and communicating clearly with both technical and non-technical teams. Key clients I've supported include Lloyds Banking Group, the UK Home Office, and the John Lewis Partnership.",
+    "Cloud, data & platform engineer with 6+ years turning manual, fragile systems into automated platforms — across financial services, public sector, and retail.",
+  bio: "I'm a Lead Cloud Engineer with over six years designing, automating, and operating cloud-native platforms across financial services, the public sector, and retail. Today I lead cloud engineering on a financial-crime intelligence data platform at Lloyds Banking Group. AWS and Google Cloud certified, I work deep in Kubernetes, Terraform and Python — and increasingly in the data and AI tooling built on top, from reusable infrastructure modules to retrieval and evaluation systems I build from first principles. I like turning repetitive, manual work into reliable automation, mentoring engineers, and explaining complex systems clearly to technical and non-technical people alike. Clients I've supported include Lloyds Banking Group, the UK Home Office, and the John Lewis Partnership.",
   location: "Leeds, United Kingdom",
   url: "https://sambird.io",
   email: "sam.birdd@hotmail.co.uk",
+  // A soft, non-desperate signal. Shown on /about and /contact.
+  availability:
+    "Open to conversations about senior & staff platform, cloud and data engineering roles — UK-based, remote-friendly.",
+  // Set to e.g. "/sam-bird-cv.pdf" once a CV is added to /public; the download
+  // button only renders when this is non-empty.
+  cvUrl: "",
   links: {
+    // Canonical handle. github.com/SamBird/* redirects here.
     linkedin: "https://www.linkedin.com/in/sambird-io/",
     github: "https://github.com/sambird-io",
   },
 } as const;
 
+// What I want to be known for. Each pillar links somewhere that proves it.
+export type Pillar = {
+  title: string;
+  body: string;
+  href: string;
+};
+
+export const pillars: Pillar[] = [
+  {
+    title: "Cloud & Platform Engineering",
+    body: "Self-service platforms on AWS and GCP — Kubernetes, Terraform and CI/CD that cut delivery time and engineering toil.",
+    href: "/projects",
+  },
+  {
+    title: "Data & AI Tooling",
+    body: "Leading cloud engineering on a financial-crime data platform — plus retrieval and evaluation systems I build from first principles.",
+    href: "/writing",
+  },
+  {
+    title: "Engineering Leadership",
+    body: "Leading delivery, mentoring engineers across teams, and running tech-talk series that level up how whole orgs build.",
+    href: "/about",
+  },
+];
+
 export type Experience = {
   company: string;
   role: string;
-  // TODO: fill in real start/end (e.g. "2023 — Present")
   period: string;
   logo: string;
   logoAlt: string;
-  // TODO: replace bullets with real impact statements
   bullets: string[];
 };
 
@@ -106,10 +138,31 @@ export const skills: SkillGroup[] = [
   },
   {
     title: "CI/CD & Automation",
-    skills: ["Jenkins", "GitLab CI", "GitHub", "Python", "Groovy", "Gradle"],
+    skills: ["Jenkins", "GitLab CI", "GitHub Actions", "Gradle"],
+  },
+  {
+    title: "Languages",
+    skills: ["Python", "Go", "Bash", "Groovy"],
+  },
+  {
+    title: "Data & AI tooling",
+    skills: ["RAG", "Claude API", "Embeddings", "ChromaDB", "Evaluation"],
   },
   {
     title: "Observability & Quality",
     skills: ["Prometheus", "Dynatrace", "SonarQube", "Nexus"],
   },
+];
+
+// Truthful, generic — the site already states AWS + GCP certified. Specific
+// titles / Credly links can be slotted in later via `url`.
+export type Certification = {
+  name: string;
+  issuer: string;
+  url?: string;
+};
+
+export const certifications: Certification[] = [
+  { name: "AWS Certified", issuer: "Amazon Web Services" },
+  { name: "Google Cloud Certified", issuer: "Google Cloud" },
 ];

@@ -25,14 +25,20 @@ const links = [
 
 export function Contact() {
   return (
-    <section id="contact" className="px-6 py-24">
+    <section className="px-6 pt-32 pb-24">
       <div className="mx-auto max-w-3xl text-center">
-        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+        <p className="text-sm font-semibold uppercase tracking-wider text-accent">
+          Contact
+        </p>
+        <h1 className="mt-3 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
           Get in touch
-        </h2>
+        </h1>
         <p className="mt-4 text-balance text-base text-muted-foreground sm:text-lg">
-          Always happy to chat about cloud engineering, DevOps, or automation.
-          The fastest way to reach me is email.
+          Always happy to talk cloud, platform and data engineering — or to
+          mentor. The fastest way to reach me is email.
+        </p>
+        <p className="mx-auto mt-3 max-w-xl text-balance text-sm text-muted-foreground">
+          {site.availability}
         </p>
         <ul className="mt-10 grid gap-4 sm:grid-cols-3">
           {links.map(({ label, href, icon: Icon, handle }) => (
