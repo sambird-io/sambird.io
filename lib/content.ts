@@ -1,14 +1,13 @@
 // Single source of truth for site copy.
-// Edit the TODO placeholders to fill in real content.
 
 export const site = {
   name: "Sam Bird",
   role: "Lead Cloud Engineer",
   company: "Lloyds Banking Group",
   tagline:
-    "Cloud & DevOps engineering leader with 6+ years automating cloud-native workloads across financial services, public sector, and retail.",
-  bio: "I'm a Lead Cloud Engineer with over six years designing, automating, and operating cloud-native workloads across financial services, the public sector, and retail. AWS and Google Cloud certified, I bring deep expertise in DevOps practices, cloud infrastructure, and automation with tools like Terraform, Jenkins, and Python. I have a knack for turning manual, repetitive work into reliable automation, and I enjoy mentoring junior engineers and communicating clearly with both technical and non-technical teams. Key clients I've supported include Lloyds Banking Group, the UK Home Office, and the John Lewis Partnership.",
-  location: "Leeds, United Kingdom",
+    "Cloud and data-platform engineer designing secure, observable GCP platforms for regulated financial services.",
+  bio: "I'm a Lead Cloud Engineer with more than seven years in cloud and DevOps engineering. I design and improve data platforms, delivery systems, and cloud infrastructure in regulated environments, with a current focus on Google Cloud, Kubernetes, Terraform, and automation. I enjoy solving cross-team technical problems, turning constraints into reusable engineering patterns, and helping people make clear, well-informed decisions. My experience spans Lloyds Banking Group, the UK Home Office, and the John Lewis Partnership.",
+  location: "Yorkshire, United Kingdom",
   url: "https://sambird.io",
   email: "sam.birdd@hotmail.co.uk",
   links: {
@@ -20,11 +19,9 @@ export const site = {
 export type Experience = {
   company: string;
   role: string;
-  // TODO: fill in real start/end (e.g. "2023 — Present")
   period: string;
   logo: string;
   logoAlt: string;
-  // TODO: replace bullets with real impact statements
   bullets: string[];
 };
 
@@ -37,6 +34,9 @@ export const experience: Experience[] = [
     logoAlt: "Lloyds Banking Group",
     bullets: [
       "Lead cloud engineering on the Economic Crime Intelligence data platform.",
+      "Build reusable cloud and platform patterns that improve consistency and delivery.",
+      "Strengthen reliability and operability through automation, observability, and least-privilege access.",
+      "Mentor engineers and communicate architectural trade-offs clearly to technical and non-technical stakeholders.",
     ],
   },
   {
@@ -98,7 +98,7 @@ export type SkillGroup = {
 export const skills: SkillGroup[] = [
   {
     title: "Cloud & Containers",
-    skills: ["AWS", "Google Cloud", "Kubernetes", "Docker", "Helm"],
+    skills: ["Google Cloud", "AWS", "Kubernetes", "Docker", "Helm"],
   },
   {
     title: "Infrastructure as Code",
@@ -111,5 +111,32 @@ export const skills: SkillGroup[] = [
   {
     title: "Observability & Quality",
     skills: ["Prometheus", "Dynatrace", "SonarQube", "Nexus"],
+  },
+];
+
+export type SelectedWork = {
+  title: string;
+  kind: string;
+  period: string;
+  description: string;
+  href?: string;
+  linkLabel?: string;
+};
+
+export const selectedWork: SelectedWork[] = [
+  {
+    title: "Inside the Kubernetes Cluster",
+    kind: "Talk & teaching demo",
+    period: "2026",
+    description:
+      "Built a local-first, live teaching demo showing what happens after you apply YAML — from API validation and scheduling to reconciliation, readiness, scaling, and rollouts.",
+    href: "https://github.com/sambird-io/inside-the-k8s-cluster",
+    linkLabel: "Explore the project",
+  },
+  {
+    title: "Google Cloud Summit London",
+    kind: "Speaking",
+    period: "2024",
+    description: "Presented at Google Cloud Summit London.",
   },
 ];

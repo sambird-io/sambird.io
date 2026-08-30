@@ -1,6 +1,6 @@
 # sambird.io
 
-[Sam Bird](https://sambird.io)'s personal site — Lead Cloud Engineer @ Lloyds Banking Group.
+[Sam Bird](https://sambird.io)'s personal site — a Lead Cloud Engineer building cloud and data platforms in regulated financial services.
 
 **Live:** https://sambird.io
 
@@ -15,7 +15,7 @@
 ```
 app/                 # routes, layout, metadata, OG image, sitemap, robots
 components/
-  sections/          # Hero · About · Experience · Skills · Contact
+  sections/          # Hero · About · Experience · Selected work · Skills · Contact
   …                  # nav, footer, theme toggle, timeline item
 lib/content.ts       # ← all site copy (single source of truth)
 public/img/          # avatar + company logos
@@ -43,6 +43,7 @@ npm run dev        # http://localhost:3000
 ```bash
 npm run lint       # eslint
 npx tsc --noEmit   # types
+npm audit --omit=dev --audit-level=high
 npm run build      # production build (standalone output)
 ```
 
