@@ -60,12 +60,14 @@ automatically.
 2. **GitHub** (`sambird-io/sambird.io`): branch off `main` (never commit to `main`
    directly); use conventional commits;
    `gh pr create --base main` → `gh pr merge <#> --squash --delete-branch` → sync `main`.
-3. **Deploy to Fly** (app **`sambird`**, primary region `lhr`) — in place, **never destroy**
-   (that releases the IPs + sambird.io/www certs): `fly deploy --ha=false -a sambird`.
-   The deploy-time `not listening on … 0.0.0.0:3000` warning is a **false alarm**
-   (Fly checks the socket before Next finishes binding).
-4. **Verify:** `curl -s https://sambird.fly.dev` → `200` + new `<title>`; `grep` the
-   live HTML for changed strings; `fly logs -a sambird --no-tail | tail -30` shows `✓ Ready`.
+3. **Deploy to Fly** through `.github/workflows/ci.yml`: merging to `main` runs
+   quality/browser and Docker smoke gates before deploying the existing app
+   **`sambird`**. Primary region configuration is `lhr`; never destroy the app
+   (that releases the IPs + sambird.io/www certs). The repository secret
+   `FLY_API_TOKEN` must be an app-scoped deploy token; see README for rotation.
+4. **Verify:** CI runs `scripts/smoke-test.mjs` against `https://sambird.io`,
+   comparing `/health` with the deployed commit ID. Confirm the workflow succeeds
+   and inspect the live site. Manual recovery instructions are in README.
 
 ## Custom domain (only when DNS / hostnames change)
 DNS is on **GoDaddy** (manual). apex `sambird.io` → `A 66.241.124.227`,

@@ -66,12 +66,53 @@ For an HTTP standalone preview, run `npm run start:standalone` after building
 
 ## Deployment
 
-The site uses the existing Fly app `sambird`. Deployments must update that app
-in place so its IP addresses and domain certificates are retained.
+[GitHub Actions](https://github.com/sambird-io/sambird.io/actions/workflows/ci.yml)
+runs these gates on pull requests and on `main`:
+
+1. Lint, TypeScript, production dependency audit, standalone build and browser tests.
+2. Build the production Docker image, run it, and smoke-test its routes, assets,
+   security headers and build revision.
+3. After both gates pass on `main`, deploy to Fly and smoke-test the public domain.
+
+The workflow can also be run manually on `main` through **Actions → CI → Run
+workflow**. Pull requests never deploy. Production runs are serialized and aren't
+cancelled by later pushes. Browser reports and failure traces are retained as
+workflow artifacts for seven days.
+
+The Fly app is `sambird`. Deployments update it in place; never recreate it because
+that would release the IP addresses and domain certificates. `fly.toml` retains
+automatic stop/start and adds an HTTP health check at `/health`. That endpoint
+reports the build revision, allowing CI to reject a stale release.
+
+### Deploy credential
+
+GitHub requires the repository secret `FLY_API_TOKEN`, containing an **app-scoped**
+deploy token for `sambird`. The token configured on 20 September 2026 expires after
+one year; rotate it before 20 September 2027 or sooner when needed. With Fly and
+GitHub authenticated, rotate it without displaying it:
 
 ```bash
-fly deploy --remote-only --ha=false --app sambird
+set -o pipefail
+fly tokens create deploy --app sambird --name github-actions-sambird --expiry 8760h |
+  gh secret set FLY_API_TOKEN --repo sambird-io/sambird.io
 ```
+
+Revoke the old token in Fly after verifying the replacement. Keep credentials out
+of the repository and build context. See Fly's [GitHub Actions guide](https://fly.io/docs/launch/continuous-deployment-with-github-actions/)
+and [token documentation](https://fly.io/docs/security/tokens/).
+
+### Manual recovery
+
+The CI pipeline is the usual deployment path. For a manual recovery from a tested,
+clean checkout:
+
+```bash
+fly deploy --remote-only --ha=false --app sambird --build-arg APP_REVISION="$(git rev-parse HEAD)"
+BASE_URL=https://sambird.io EXPECTED_REVISION="$(git rev-parse HEAD)" node scripts/smoke-test.mjs
+```
+
+The smoke test checks the commit ID, primary routes, a case study, an article,
+CSS, RSS, sitemap, robots, the social image and the `www` canonical redirect.
 
 ## License
 

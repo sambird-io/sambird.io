@@ -9,6 +9,8 @@ COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
 FROM base AS builder
+ARG APP_REVISION=development
+ENV APP_REVISION=${APP_REVISION}
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
