@@ -16,8 +16,8 @@ export default function WritingPage() {
     <>
       <PageHeader
         eyebrow="Writing"
-        title="Notes from the workbench."
-        intro="Long-form writing on cloud, platform and data engineering: how the systems work, why they break, and what I've learned shipping them."
+        title="Writing"
+        intro="Notes on cloud, platform and data engineering: how the systems work, why they break, and what I&rsquo;ve learned shipping them."
       />
       <section className="site-shell pb-24">
         <div className="border-b border-border">

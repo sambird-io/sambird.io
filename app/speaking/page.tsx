@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 
 export const metadata: Metadata = {
@@ -37,25 +36,22 @@ export default function SpeakingPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Speaking / Sharing what I learn"
+        eyebrow="Speaking"
         title="Making complex systems click."
         intro="The best explanation gives you something to point at. I use live demos, real engineering problems and practical examples to make systems easier to understand."
       />
       <section className="site-shell pb-20" aria-label="Selected talks and sessions">
         <ol className="border-t border-border">
-          {talks.map((talk, index) => (
-            <li key={talk.title} className="grid gap-5 border-b border-border py-9 md:grid-cols-[180px_minmax(0,1fr)] md:gap-12 md:py-12">
-              <div className="flex items-center justify-between gap-4 md:block">
-                <p className="eyebrow">{String(index + 1).padStart(2, "0")}</p>
-                <p className="font-mono text-xs text-muted-foreground md:mt-5">{talk.period}</p>
-              </div>
+          {talks.map((talk) => (
+            <li key={talk.title} className="grid gap-3 border-b border-border py-7 sm:grid-cols-[160px_minmax(0,1fr)] sm:gap-8 sm:py-8">
+              <p className="text-sm leading-6 text-muted-foreground">{talk.period}</p>
               <article>
-                <p className="eyebrow text-accent">{talk.context}</p>
-                <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">{talk.title}</h2>
-                <p className="mt-5 max-w-2xl text-base leading-8 text-muted-foreground">{talk.body}</p>
+                <p className="text-sm text-muted-foreground">{talk.context}</p>
+                <h2 className="mt-2 text-xl font-medium tracking-tight sm:text-2xl">{talk.title}</h2>
+                <p className="mt-3 max-w-2xl text-base leading-7 text-muted-foreground">{talk.body}</p>
                 {talk.href && (
-                  <Link href={talk.href} className="text-link mt-6 min-h-11 text-sm">
-                    {talk.linkLabel} <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                  <Link href={talk.href} className="mt-4 inline-flex min-h-11 items-center text-sm text-accent underline underline-offset-4 hover:decoration-2">
+                    {talk.linkLabel}
                   </Link>
                 )}
               </article>
@@ -63,17 +59,11 @@ export default function SpeakingPage() {
           ))}
         </ol>
       </section>
-      <section className="border-t border-border bg-surface py-16" aria-labelledby="speaking-contact-title">
-        <div className="site-shell flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
-          <div className="max-w-xl">
-            <p className="eyebrow">Bring a question</p>
-            <h2 id="speaking-contact-title" className="mt-4 text-3xl font-semibold tracking-tight">Let&rsquo;s work through it together.</h2>
-            <p className="mt-4 text-base leading-7 text-muted-foreground">For talks, workshops, internal sessions or one-to-one mentoring.</p>
-          </div>
-          <Link href="/contact" className="button-primary shrink-0">
-            Start a conversation <ArrowRight className="h-4 w-4" aria-hidden="true" />
-          </Link>
-        </div>
+      <section className="site-shell border-t border-border py-8" aria-labelledby="speaking-contact-title">
+        <h2 id="speaking-contact-title" className="text-sm font-medium">Talks, workshops, internal sessions or one-to-one mentoring.</h2>
+        <Link href="/contact" className="mt-2 inline-flex min-h-11 items-center text-sm text-accent underline underline-offset-4 hover:decoration-2">
+          Start a conversation
+        </Link>
       </section>
     </>
   );

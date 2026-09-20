@@ -5,7 +5,6 @@ import { ArrowLeft } from "lucide-react";
 import { getProject, projects } from "@/lib/projects";
 import { site } from "@/lib/content";
 import { GithubIcon } from "@/components/icons";
-import { ProjectArt } from "@/components/project-art";
 import { ClusterDiagram } from "@/components/cluster-diagram";
 
 export function generateStaticParams() {
@@ -70,7 +69,7 @@ export default async function ProjectPage({
   };
 
   return (
-    <article className="site-shell pt-32 pb-24 sm:pt-40">
+    <article className="site-shell pt-14 pb-20 sm:pt-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -86,7 +85,7 @@ export default async function ProjectPage({
           All projects
         </Link>
 
-        <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        <div className="mt-8 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
           <span>{project.year}</span>
           <span aria-hidden="true">&middot;</span>
           <span>{project.context}</span>
@@ -98,16 +97,7 @@ export default async function ProjectPage({
           {project.tagline}
         </p>
 
-        <ul className="mt-6 flex flex-wrap gap-2">
-          {project.stack.map((tech) => (
-            <li
-              key={tech}
-              className="rounded border border-border px-3 py-1.5 font-mono text-[10px] text-muted-foreground"
-            >
-              {tech}
-            </li>
-          ))}
-        </ul>
+        <p className="mt-5 text-sm leading-6 text-muted-foreground">{project.stack.join(" · ")}</p>
 
         {project.repo && (
           <div className="mt-8 flex flex-wrap gap-3">
@@ -115,7 +105,7 @@ export default async function ProjectPage({
               href={project.repo}
               target="_blank"
               rel="noopener noreferrer"
-              className="button-primary"
+              className="text-link"
             >
               <GithubIcon className="h-4 w-4" aria-hidden="true" />
               View on GitHub
@@ -123,13 +113,13 @@ export default async function ProjectPage({
           </div>
         )}
 
-        <div className="mt-12 overflow-hidden rounded-md border border-border">
-          {project.slug === "inside-the-kubernetes-cluster" ? <ClusterDiagram /> : <ProjectArt slug={project.slug} />}
-        </div>
+        {project.slug === "inside-the-kubernetes-cluster" && (
+          <div className="mt-12"><ClusterDiagram /></div>
+        )}
         <div className="mt-12 space-y-10">
           {sections.map((section) => (
             <section key={section.key} className="grid gap-4 border-t border-border pt-8 sm:grid-cols-[160px_1fr] sm:gap-10">
-              <h2 className="font-mono text-xs font-semibold uppercase tracking-wider text-accent-2">
+              <h2 className="text-sm font-medium text-foreground">
                 {section.label}
               </h2>
               <p className="text-base leading-8 text-muted-foreground">
@@ -139,7 +129,7 @@ export default async function ProjectPage({
           ))}
 
           <section>
-            <h2 className="font-mono text-xs font-semibold uppercase tracking-wider text-accent-2">
+            <h2 className="text-sm font-medium text-foreground">
               Highlights
             </h2>
             <ul className="mt-3 space-y-2">
@@ -148,10 +138,7 @@ export default async function ProjectPage({
                   key={highlight}
                   className="flex gap-3 text-base leading-relaxed text-muted-foreground"
                 >
-                  <span
-                    aria-hidden="true"
-                    className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
-                  />
+              <span aria-hidden="true" className="mt-3 h-1 w-1 shrink-0 bg-muted-foreground" />
                   <span>{highlight}</span>
                 </li>
               ))}

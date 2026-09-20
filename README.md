@@ -13,7 +13,7 @@ image on Fly.io.
 app/                  # Home, About, Projects, Writing, Speaking, Uses, Contact
                       # Case studies, MDX articles, RSS, metadata and social images
 components/sections/  # Page sections
-components/           # Shared navigation, cards, diagrams, typography and footer
+components/           # Shared navigation, simple project/article rows and footer
 lib/content.ts        # Identity, biography, career, skills and credentials
 lib/projects.ts       # Project metadata and case studies
 lib/posts.ts          # Article metadata; slugs match the MDX filenames

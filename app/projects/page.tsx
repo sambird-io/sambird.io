@@ -18,8 +18,8 @@ export default function ProjectsPage() {
         title="Things I've built"
         intro="A mix of teaching tools, reference builds and experiments, each one a way to learn a system deeply, or to make a hard one easier for others to understand."
       />
-      <section className="site-shell pb-24">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="site-shell pb-20">
+        <div>
           {projects.map((project) => (
             <ProjectCard key={project.slug} project={project} headingLevel={2} />
           ))}
