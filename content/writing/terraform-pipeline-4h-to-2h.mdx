@@ -1,0 +1,37 @@
+A while back I picked up a piece of work that sounds dull and turned out to be one of the most useful things I did that year: an environment-provisioning pipeline took **four hours** to run, and the platform team wanted to know why. By the end I'd documented the bottlenecks and got it down to **two**. Here's the way of thinking that got it there, most of which has nothing to do with Terraform specifically.
+
+## Measure before you optimise
+
+The first mistake people make with a slow pipeline is guessing. Someone is sure it's the `terraform plan`; someone else blames the cloud provider's API; everyone has a hunch and nobody has a timeline.
+
+So I didn't change anything at first. I made the pipeline tell me where its time went: stage timings, and within the slow stages, timestamps around the expensive calls. A slow pipeline is a measurement problem before it's a performance problem. Once you can see the shape of the four hours, the work stops being mysterious.
+
+## Where the time actually went
+
+The timeline made the structure obvious, and it's a structure I've seen many times since:
+
+- **Sequential stages that didn't depend on each other.** Independent modules were applied one after another purely because that's how the pipeline had grown, not because anything required it.
+- **Repeated work.** Provider plugins and modules were being downloaded fresh on every run, on every agent, because nothing was cached.
+- **Waiting on slow resources.** A few cloud resources are just slow to create, and the pipeline sat blocked on them while doing nothing else.
+
+Notice that only the last one is really about Terraform. The other two are pipeline-design problems that would slow down *any* tool.
+
+## The fixes
+
+In rough order of payoff:
+
+1. **Parallelise the independent work.** Stages that don't share state or depend on each other's outputs can run at the same time. This was the single biggest win. A lot of that four hours was things politely waiting their turn for no reason.
+2. **Cache what you keep re-fetching.** Persisting provider plugins and module downloads between runs removed a chunk of dead time that was pure repetition.
+3. **Scope the work.** Smaller, well-separated state and targeted applies mean each run does less, and a change in one area doesn't force everything else to be re-evaluated.
+
+I deliberately didn't reach for clever tricks. Each change was boring and easy to explain to the next engineer, which matters more than cleverness in a pipeline a whole team depends on.
+
+## The general lesson
+
+The reason I still think about this work is that the method generalises far beyond Terraform:
+
+- **Instrument first.** You cannot optimise what you cannot see, and your intuition about where time goes is usually wrong.
+- **Most "slow tool" problems are actually "serial when it could be parallel" problems.** Look at the dependency graph before you look at the tool.
+- **Write down what you found.** Half the value here wasn't the speed-up. It was a document the platform team could use to keep the pipeline fast as it grew.
+
+Four hours to two is a nice headline, but the durable outcome was a team that now knew *where* its pipeline spent time and how to keep an eye on it. Performance work is rarely about one heroic fix. It's about making the system legible enough that the slow parts have nowhere to hide.

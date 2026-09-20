@@ -1,0 +1,44 @@
+Retrieval-augmented generation has a failure mode that quietly wastes a lot of engineering time: when an answer is wrong, you can't immediately tell *why*. Did the system retrieve the wrong context, or did it retrieve the right context and the model still answered badly? Those are two completely different bugs with two completely different fixes, and most RAG stacks make it hard to tell them apart.
+
+I want to be upfront: I'm not an AI specialist. I'm a cloud and platform engineer who got curious about how these systems actually work, so I built one from scratch, with no frameworks, over the Kubernetes documentation. The point wasn't to ship a product. It was to understand every component well enough to debug it. The project is [Eval-First RAG](/projects/eval-first-rag).
+
+## Why no framework
+
+Frameworks like LangChain or LlamaIndex are genuinely useful, but they abstract away exactly the parts you most need to understand when you're learning: how text gets chunked, what an embedding actually is, how retrieval ranks results, and where the prompt boundary sits.
+
+Building each step by hand is slower, but it makes every decision explicit and inspectable. You can't reason about a pipeline whose internals you can't see.
+
+## The pipeline, one piece at a time
+
+A RAG system is really four steps, and naming them clearly is half the battle:
+
+- **Chunking:** split documents into passages small enough to embed but large enough to carry meaning. Chunk too small and you lose context; too large and retrieval gets noisy.
+- **Embedding:** turn each chunk into a vector with a model like `sentence-transformers`, so semantic similarity becomes distance in vector space.
+- **Retrieval:** embed the user's question the same way, then ask a vector store (I used ChromaDB) for the nearest chunks.
+- **Generation:** hand those chunks to the model (Claude, in my case) as context and ask it to answer using only what it was given.
+
+Written out like that, it's not mysterious. Each step is a place where quality can be lost, and each one is independently testable.
+
+## Evaluation comes first
+
+Here's the part the project's name is about. If you can only measure the system end-to-end (question in, answer out) then every failure is ambiguous. The fix is to evaluate the two halves *separately*:
+
+- **Retrieval quality**: for a question, did the right chunks come back at all? You can measure this without involving the model, because it's really a search problem.
+- **Generation quality**: *given* good context, did the model produce a faithful, correct answer? You can measure this with context held constant.
+
+Once those are separate numbers, debugging stops being guesswork. Bad retrieval and good generation means your chunking or embeddings need work. Good retrieval and bad generation means your prompt or model does. You stop tuning blind.
+
+```
+end-to-end score        -> "it's wrong" (unactionable)
+retrieval + generation  -> "retrieval is fine, generation drifts" (a plan)
+```
+
+## What I'd tell my past self
+
+Three things stuck with me:
+
+1. **Chunking is a real design decision**, not a default. It quietly determines the ceiling on retrieval quality.
+2. **Evals are not a final QA step.** Built first, they turn the whole project into a feedback loop instead of a vibes-based one.
+3. **Most "the AI is wrong" complaints are retrieval bugs in disguise.** The model never saw the right context, so of course it guessed.
+
+None of this requires a framework, a GPU, or a research budget. It requires being willing to look at each step honestly and measure it. That's the same discipline I bring to infrastructure, and it turns out to matter just as much when the system is probabilistic.

@@ -4,25 +4,29 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --muted: #6b7280;
-  --muted-foreground: #4b5563;
-  --surface: #f5f5f5;
-  --border: #e5e5e5;
-  --accent: #2563eb;
+  --background: #f7f7f0;
+  --foreground: #202b25;
+  --muted: #697069;
+  --muted-foreground: #59635c;
+  --surface: #eeefe6;
+  --border: #d9ddd2;
+  --accent: #285940;
   --accent-foreground: #ffffff;
+  --accent-2: #285940;
+  --accent-2-foreground: #ffffff;
 }
 
 .dark {
-  --background: #0a0a0a;
-  --foreground: #f5f5f5;
-  --muted: #9ca3af;
-  --muted-foreground: #a1a1aa;
-  --surface: #141414;
-  --border: #262626;
-  --accent: #60a5fa;
-  --accent-foreground: #0a0a0a;
+  --background: #17201b;
+  --foreground: #f0f1e8;
+  --muted: #abb4a9;
+  --muted-foreground: #b3bcb0;
+  --surface: #202c24;
+  --border: #3b493e;
+  --accent: #b4d5a2;
+  --accent-foreground: #17201b;
+  --accent-2: #b4d5a2;
+  --accent-2-foreground: #17201b;
 }
 
 @theme inline {
@@ -34,12 +38,16 @@
   --color-border: var(--border);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-2: var(--accent-2);
+  --color-accent-2-foreground: var(--accent-2-foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 7rem;
+  scrollbar-gutter: stable;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -68,11 +76,158 @@ body {
   color: var(--accent-foreground);
 }
 
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-}
-
 section {
   scroll-margin-top: 4.5rem;
+}
+
+/* Long-form MDX content (blog posts). Scoped so it never leaks into the rest
+   of the UI. */
+.article {
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  overflow-wrap: break-word;
+  color: var(--muted-foreground);
+}
+
+.article > * + * {
+  margin-top: 1.25rem;
+}
+
+.article h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--foreground);
+}
+
+.article h3 {
+  margin-top: 2rem;
+  margin-bottom: 0.25rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.article strong {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.article a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.article a:hover {
+  opacity: 0.85;
+}
+
+.article ul,
+.article ol {
+  margin-top: 1.25rem;
+  padding-left: 1.4rem;
+}
+
+.article ul {
+  list-style: disc;
+}
+
+.article ol {
+  list-style: decimal;
+}
+
+.article li + li {
+  margin-top: 0.5rem;
+}
+
+.article li::marker {
+  color: var(--muted);
+}
+
+.article blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 1rem;
+  font-style: italic;
+}
+
+.article hr {
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.article code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875em;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.1rem 0.35rem;
+}
+
+.article pre {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* Code inside a fenced block shouldn't get the inline pill treatment. */
+.article pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: inherit;
+}
+
+/* Shared editorial system. */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 5px; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+.site-shell { width: 100%; max-width: 1176px; margin-inline: auto; padding-inline: 28px; }
+.section-space { padding-block: 88px; }
+.eyebrow { font-family: var(--font-mono), monospace; font-size: 11px; font-weight: 500; line-height: 1.7; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.display-title { font-size: clamp(2.7rem, 6.3vw, 4.75rem); line-height: 1.06; letter-spacing: -.055em; font-weight: 500; text-wrap: balance; }
+.section-title { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.12; font-weight: 500; letter-spacing: -.045em; }
+.text-link { display: inline-flex; align-items: center; gap: .55rem; min-height: 44px; font-size: .875rem; font-weight: 500; text-underline-offset: 5px; }
+.text-link:hover { text-decoration: underline; }
+.button-primary, .button-secondary { display: inline-flex; justify-content: center; align-items: center; gap: .75rem; min-height: 48px; padding: .7rem 1.25rem; border: 1px solid var(--accent); border-radius: 6px; font-size: .875rem; font-weight: 500; transition: background .2s, transform .2s; }
+.button-primary { background: var(--accent); color: var(--accent-foreground); }
+.button-secondary { border-color: var(--border); background: transparent; }
+.button-primary:hover, .button-secondary:hover { transform: translateY(-2px); }
+.button-secondary:hover { background: var(--surface); }
+.skip-link { position: fixed; left: 24px; top: -100px; z-index: 100; padding: 12px 20px; background: var(--foreground); color: var(--background); border-radius: 4px; }
+.skip-link:focus { top: 16px; }
+.hero-title { max-width: 780px; font-size: clamp(3.2rem, 7.1vw, 6.1rem); line-height: 1.03; letter-spacing: -.064em; font-weight: 500; }
+.hero-title em { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; letter-spacing: -.06em; color: var(--accent); }
+.hero-portrait { position: relative; aspect-ratio: 4 / 5; width: 100%; overflow: hidden; border-radius: 3px; background: var(--surface); }
+.hero-portrait img { filter: saturate(.6); }
+.hero-portrait::after { position: absolute; inset: 0; content: ''; border: 1px solid rgb(255 255 255 / .15); margin: 10px; pointer-events: none; }
+.grid-paper { background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 24px 24px; }
+.project-card { display: flex; flex-direction: column; min-width: 0; height: 100%; border: 1px solid var(--border); border-radius: 7px; overflow: hidden; transition: border-color .2s, transform .2s; }
+.project-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+.project-art { position: relative; height: 190px; display: flex; justify-content: center; align-items: center; overflow: hidden; border-bottom: 1px solid var(--border); background-color: var(--surface); }
+.project-art svg { width: 100%; height: 100%; color: var(--accent); }
+.project-art-label { position: absolute; bottom: 12px; left: 16px; font-family: var(--font-mono), monospace; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted-foreground); }
+.post-row { display: grid; grid-template-columns: 160px 1fr 32px; gap: 30px; padding-block: 32px; border-top: 1px solid var(--border); }
+.post-row:hover h2, .post-row:hover h3 { color: var(--accent); }
+.diagram { border: 1px solid #526759; border-radius: 8px; background: #213c2d; color: #e8efdf; padding: 24px; }
+.diagram-node { border: 1px solid #6b826c; background: #2b4937; border-radius: 5px; padding: 13px 10px; text-align: center; font-family: var(--font-mono), monospace; font-size: 11px; }
+.diagram-connector { width: 1px; height: 24px; background: #8cab83; margin-inline: auto; }
+.diagram-label { color: #c0d1b5; font-family: var(--font-mono), monospace; font-size: 10px; }
+@media (max-width: 639px) {
+  .site-shell { padding-inline: 22px; }
+  .section-space { padding-block: 56px; }
+  .post-row { grid-template-columns: 1fr 22px; gap: 12px; padding-block: 26px; }
+  .post-row > :first-child { grid-column: 1 / -1; }
+  .diagram { padding: 18px; }
 }

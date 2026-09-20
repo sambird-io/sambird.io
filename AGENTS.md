@@ -10,10 +10,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 # Working on this site (sambird.io portfolio)
 
-Sam Bird's personal portfolio. Single page: **Hero → About → Experience → Selected
-Work → Skills → Contact** (`app/page.tsx` composes the sections in
-`components/sections/`).
-Next.js 16 + Tailwind v4, dark mode, deployed as a standalone Docker image on Fly.
+Sam Bird's personal portfolio. Multi-page site: **Home, Projects, Writing, About,
+Speaking, Uses, Contact**, plus project case studies and MDX articles.
+Next.js 16 + Tailwind v4, light/dark themes, deployed as a standalone Docker image on Fly.
+The visual direction and research are documented in `docs/design.md`.
 
 ## Content lives in `lib/content.ts` (single source of truth)
 Most changes are data edits here, not component changes. The hero badge, `<title>`,
@@ -26,7 +26,9 @@ automatically.
   bullets[]}`, rendered by `components/sections/experience.tsx` + `timeline-item.tsx`.
   The list keys on `company-role-period`, so those three together must stay unique.
 - `skills[]` — groups of `{title, skills[]}`.
-- `selectedWork[]` — talks and substantial public projects; links are optional.
+- `lib/projects.ts` — project metadata and problem/approach/result case studies.
+- `lib/posts.ts` — article metadata; bodies live in `content/writing/<slug>.mdx`.
+- `app/speaking/page.tsx` — public talks and the internal teaching series.
 
 ## Change recipes
 - **Positioning / bio / tagline** → edit `site` fields (never hardcode in components).
@@ -36,8 +38,8 @@ automatically.
   `curl -A "sambird.io-build" -o public/img/<name>.png "https://upload.wikimedia.org/.../250px-<Logo>.png"`,
   then verify with `file`.
 - **Skills** → edit `skills[]` groups; keep to Sam's real toolchain.
-- **Talks / public projects** → edit `selectedWork[]`; only publish work that is
-  already public or cleared for external sharing.
+- **Projects / writing** → update the relevant metadata and MDX files. Keep article
+  slugs aligned. Only publish work already public or cleared for external sharing.
 
 ## Editorial rules (do not break)
 - **Accuracy over polish** — every claim must be true. The old site shipped fake stats
@@ -48,11 +50,13 @@ automatically.
   Positioning is **DevOps / Cloud engineering**, not people-management.
 
 ## Build → ship → deploy
-1. **Test:** `npx tsc --noEmit` · `npm run lint` ·
-   `npm audit --omit=dev --audit-level=high` · `npm run build` (must emit standalone
-   output — the Dockerfile depends on it). Eyeball: `npm run dev`, then
-   `curl -s localhost:3000 | grep -E '<title>|TODO'` → right title, zero `TODO`.
-   (The dev server is killed when idle in agent harnesses — restart if the port is dead.)
+1. **Test:** `npm run typecheck` · `npm run lint` ·
+   `npm audit --omit=dev --audit-level=high` · `npm run build` · `npm run test:e2e`.
+   Install browsers once with `npx playwright install chromium webkit`. Tests use
+   the standalone build behind local HTTPS on port 3100 (OpenSSL required), so
+   production security headers remain intact in Safari. Review desktop/mobile
+   screenshots in both themes after visual changes. Never rebuild `.next` while
+   its standalone server is serving a browser test or visual review.
 2. **GitHub** (`sambird-io/sambird.io`): branch off `main` (never commit to `main`
    directly); use conventional commits;
    `gh pr create --base main` → `gh pr merge <#> --squash --delete-branch` → sync `main`.

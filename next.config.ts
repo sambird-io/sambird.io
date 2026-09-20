@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import createMDX from "@next/mdx";
 
 const contentSecurityPolicy = [
   "default-src 'self'",
@@ -43,6 +44,7 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
   poweredByHeader: false,
   reactStrictMode: true,
   async headers() {
@@ -65,4 +67,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default createMDX()(nextConfig);
