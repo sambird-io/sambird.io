@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { site } from "@/lib/content";
 
 const items = [
@@ -27,21 +26,21 @@ export function Beyond() {
   return (
     <section className="section-space" aria-labelledby="beyond-title">
       <div className="site-shell">
-        <p className="eyebrow">04 / Beyond the day job</p>
-        <h2 id="beyond-title" className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl">Learning is better shared.</h2>
-        <div className="mt-10 grid gap-8 md:grid-cols-3 md:gap-10">
+        <p className="eyebrow">Beyond the day job</p>
+        <h2 id="beyond-title" className="section-title mt-4">Learning is better shared.</h2>
+        <div className="mt-8 grid gap-0 md:grid-cols-3 md:gap-8">
           {items.map((item) => (
-            <article key={item.title} className="border-t border-border pt-6">
-              <h3>
+            <article key={item.title} className="border-t border-border py-5 md:py-6">
+              <h3 className="text-base font-medium">
                 <Link
                   href={item.href}
                   {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  className="text-link min-h-11 text-lg font-semibold"
+                  className="text-accent underline underline-offset-4 hover:decoration-2"
                 >
-                  {item.title} <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                  {item.title}
                 </Link>
               </h3>
-              <p className="mt-3 text-sm leading-7 text-muted-foreground">{item.body}</p>
+              <p className="mt-2 text-sm leading-7 text-muted-foreground">{item.body}</p>
             </article>
           ))}
         </div>

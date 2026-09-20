@@ -58,7 +58,7 @@ export default async function PostPage({
   };
 
   return (
-    <article className="site-shell pt-32 pb-24 sm:pt-40">
+    <article className="site-shell pt-14 pb-20 sm:pt-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -74,7 +74,7 @@ export default async function PostPage({
           All writing
         </Link>
 
-        <div className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs font-medium uppercase tracking-wider text-muted-foreground">
+        <div className="mt-8 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
           <time dateTime={post.date}>{formatDate(post.date)}</time>
           <span aria-hidden="true">&middot;</span>
           <span>{post.readingMinutes} min read</span>
@@ -82,17 +82,6 @@ export default async function PostPage({
         <h1 className="mt-6 text-balance text-4xl font-medium leading-[1.12] tracking-[-0.045em] sm:text-6xl">
           {post.title}
         </h1>
-        <ul className="mt-5 flex flex-wrap gap-2">
-          {post.tags.map((tag) => (
-            <li
-              key={tag}
-              className="font-mono text-[10px] uppercase tracking-wider text-accent"
-            >
-              {tag}
-            </li>
-          ))}
-        </ul>
-
         <p className="mt-7 border-b border-border pb-8 text-lg leading-relaxed text-muted-foreground">{post.summary}</p>
         <div className="article mt-10">
           <Body />
