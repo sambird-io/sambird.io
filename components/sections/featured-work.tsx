@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { SiteLink as Link } from "@/components/site-link";
 import { getFeaturedProjects } from "@/lib/projects";
 import { ProjectCard } from "@/components/project-card";
 
