@@ -3,38 +3,22 @@ import type { Experience } from "@/lib/content";
 
 export function TimelineItem({ item }: { item: Experience }) {
   return (
-    <li className="relative pl-12 sm:pl-16">
-      <span
-        aria-hidden="true"
-        className="absolute left-3 top-3 h-3 w-3 rounded-full border-2 border-accent bg-background sm:left-5"
-      />
-      <article className="rounded-2xl border border-border bg-background p-6 transition hover:border-accent/50">
-        <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-4">
-            <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-border bg-surface">
-              <Image
-                src={item.logo}
-                alt={item.logoAlt}
-                fill
-                sizes="48px"
-                className="object-contain p-1"
-              />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold leading-tight">
-                {item.role}
-              </h3>
-              <p className="text-sm text-muted-foreground">{item.company}</p>
-            </div>
+    <li className="grid gap-5 border-b border-border py-9 md:grid-cols-[220px_minmax(0,1fr)] md:gap-12">
+      <p className="font-mono text-xs leading-6 text-muted-foreground">{item.period}</p>
+      <article>
+        <header className="flex items-start justify-between gap-5">
+          <div>
+            <h3 className="text-xl font-semibold leading-snug tracking-tight sm:text-2xl">{item.role}</h3>
+            <p className="mt-2 text-sm font-medium text-accent">{item.company}</p>
           </div>
-          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground sm:text-right">
-            {item.period}
-          </p>
+          <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-md border border-border bg-white">
+            <Image src={item.logo} alt={item.logoAlt} fill sizes="64px" className="object-contain p-2" />
+          </div>
         </header>
-        <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+        <ul className="mt-6 space-y-3 text-sm leading-7 text-muted-foreground sm:text-base">
           {item.bullets.map((bullet) => (
-            <li key={bullet} className="flex gap-2">
-              <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-muted-foreground" />
+            <li key={bullet} className="flex gap-3">
+              <span aria-hidden="true" className="mt-3 h-1 w-1 shrink-0 rounded-full bg-accent" />
               <span>{bullet}</span>
             </li>
           ))}

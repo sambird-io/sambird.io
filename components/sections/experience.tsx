@@ -3,23 +3,21 @@ import { TimelineItem } from "@/components/timeline-item";
 
 export function Experience() {
   return (
-    <section id="experience" className="px-6 py-24">
-      <div className="mx-auto max-w-3xl">
-        <div className="max-w-2xl">
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Experience
-          </h2>
-          <p className="mt-4 text-balance text-base text-muted-foreground sm:text-lg">
-            A short tour through the places I&rsquo;ve built platforms,
-            automated delivery, and learned the most.
-          </p>
+    <section id="experience" className="section-space border-t border-border" aria-labelledby="experience-title">
+      <div className="site-shell">
+        <div className="grid gap-5 md:grid-cols-[220px_minmax(0,1fr)] md:gap-12">
+          <p className="eyebrow">01 / Experience</p>
+          <div>
+            <h2 id="experience-title" className="text-3xl font-semibold tracking-tight sm:text-4xl">Built through experience.</h2>
+            <p className="mt-4 max-w-xl text-base leading-7 text-muted-foreground">
+              The places I&rsquo;ve built platforms, automated delivery, and
+              learned what reliable engineering looks like in practice.
+            </p>
+          </div>
         </div>
-        <ol className="relative mt-12 space-y-8 before:absolute before:left-4 before:top-2 before:h-[calc(100%-1rem)] before:w-px before:bg-border sm:before:left-6">
+        <ol className="mt-12 border-t border-border">
           {experience.map((item) => (
-            <TimelineItem
-              key={`${item.company}-${item.role}-${item.period}`}
-              item={item}
-            />
+            <TimelineItem key={`${item.company}-${item.role}-${item.period}`} item={item} />
           ))}
         </ol>
       </div>

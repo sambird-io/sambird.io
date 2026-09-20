@@ -4,17 +4,21 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # Superseded PR checks can stop; a production deployment must finish.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   quality:
+    name: Quality and browser tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -32,19 +36,67 @@ jobs:
         run: npm run lint
 
       - name: Type-check
-        run: npx tsc --noEmit
+        run: npm run typecheck
 
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
 
-      - name: Build
+      - name: Build standalone application
         run: npm run build
+
+      - name: Install test browsers
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Test production application in browsers
+        run: npm run test:e2e
+
+      - name: Save browser report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  container:
+    name: Verify Docker runtime
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Build production image
+        run: docker build --build-arg APP_REVISION="$GITHUB_SHA" --tag sambird-ci .
+
+      - name: Start production image
+        run: docker run --detach --name sambird-ci --publish 127.0.0.1:3000:3000 sambird-ci
+
+      - name: Verify container routes and assets
+        run: node scripts/smoke-test.mjs
+        env:
+          BASE_URL: http://127.0.0.1:3000
+          EXPECTED_REVISION: ${{ github.sha }}
+
+      - name: Show container logs and clean up
+        if: always()
+        run: |
+          docker logs sambird-ci 2>/dev/null || true
+          docker rm --force sambird-ci 2>/dev/null || true
 
   deploy:
     name: Deploy to Fly.io
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: quality
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    needs: [quality, container]
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     concurrency:
       group: deploy-sambird-production
       cancel-in-progress: false
@@ -52,10 +104,30 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Check deployment credential
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          if [ -z "$FLY_API_TOKEN" ]; then
+            echo "::error::Set the repository secret FLY_API_TOKEN to an app-scoped deploy token for sambird. See README.md."
+            exit 1
+          fi
+
       - name: Set up flyctl
         uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1
 
       - name: Deploy sambird
-        run: flyctl deploy --remote-only --app sambird
+        run: flyctl deploy --remote-only --ha=false --app sambird --build-arg APP_REVISION="$GITHUB_SHA"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Verify public deployment
+        run: node scripts/smoke-test.mjs
+        env:
+          BASE_URL: https://sambird.io
+          EXPECTED_REVISION: ${{ github.sha }}

@@ -2,34 +2,24 @@ import { skills } from "@/lib/content";
 
 export function Skills() {
   return (
-    <section id="skills" className="bg-surface/40 px-6 py-24">
-      <div className="mx-auto max-w-5xl">
-        <div className="max-w-2xl">
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Skills
+    <section id="skills" className="section-space bg-surface" aria-labelledby="skills-title">
+      <div className="site-shell grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)] lg:gap-20">
+        <div>
+          <p className="eyebrow">02 / The toolkit</p>
+          <h2 id="skills-title" className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl">
+            Tools for the<br className="hidden lg:block" /> work at hand.
           </h2>
-          <p className="mt-4 text-balance text-base text-muted-foreground sm:text-lg">
-            Where I spend my time, both in the org chart and at the keyboard.
+          <p className="mt-5 max-w-sm text-base leading-7 text-muted-foreground">
+            The cloud, delivery and observability tools I work with, alongside
+            the systems I&rsquo;m learning by building.
           </p>
         </div>
-        <div className="mt-12 grid gap-8 sm:grid-cols-2">
+        <div className="border-t border-border">
           {skills.map((group) => (
-            <div
-              key={group.title}
-              className="rounded-2xl border border-border bg-background p-6"
-            >
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                {group.title}
-              </h3>
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {group.skills.map((skill) => (
-                  <li
-                    key={skill}
-                    className="rounded-full border border-border bg-surface px-3 py-1 text-sm"
-                  >
-                    {skill}
-                  </li>
-                ))}
+            <div key={group.title} className="border-b border-border py-5">
+              <h3 className="text-sm font-semibold">{group.title}</h3>
+              <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm leading-6 text-muted-foreground">
+                {group.skills.map((skill) => <li key={skill}>{skill}</li>)}
               </ul>
             </div>
           ))}
