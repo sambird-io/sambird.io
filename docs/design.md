@@ -1,18 +1,14 @@
 # Design direction
 
-The portfolio is a quiet, minimal working notebook. Clear language, readable
-type and generous space carry the identity; a warm near-white / charcoal base
-and a restrained green link color provide just enough visual structure. Avoid
-decorative frames, numbered section labels, gradient or grid backgrounds,
-ornamental illustrations, and card surfaces.
+The portfolio introduces Sam with a centered “Hi, I’m Sam” hero, a concise
+description, and clear links to projects, writing and contact. A soft blue glow
+and rounded calls to action add warmth without crowding the content. Employer
+logos and three areas of focus lead into the selected projects and writing.
 
-This direction keeps the strongest parts of the previous content and removes
-visual devices that competed with it. The home page introduces Sam, then moves
-directly to selected projects and recent writing. The projects and writing
-indexes use simple, ruled text rows. About, Speaking, Uses and Contact share the
-same type-led page header and list treatment. Case studies explain the problem,
-approach and result; the Kubernetes case study keeps its diagram because it
-explains the system.
+The projects and writing indexes use simple, ruled text rows. About, Speaking,
+Uses and Contact share a consistent page header and readable list treatment.
+Case studies explain the problem, approach and result; the Kubernetes case
+study keeps its diagram because it explains the system.
 
 Design references:
 
@@ -32,7 +28,8 @@ not decoration. Light and dark themes use the same layout and hierarchy.
 
 Content comes from the existing portfolio. AI work remains described as
 learning and experimentation. No invented metrics, clients, testimonials or
-production AI claims are introduced.
+production AI claims are introduced. Light and dark themes share the same
+blue-accent identity and preserve accessible contrast.
 
 ## Interaction and accessibility
 
