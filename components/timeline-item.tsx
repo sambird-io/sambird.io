@@ -2,7 +2,7 @@ import type { Experience } from "@/lib/content";
 
 export function TimelineItem({ item }: { item: Experience }) {
   return (
-    <li className="grid gap-3 border-b border-border py-7 sm:grid-cols-[160px_minmax(0,1fr)] sm:gap-8 sm:py-8">
+    <li id={item.id} className="grid scroll-mt-20 gap-3 border-b border-border py-7 sm:grid-cols-[160px_minmax(0,1fr)] sm:gap-8 sm:py-8">
       <p className="text-sm leading-6 text-muted-foreground">{item.period}</p>
       <article>
         <h3 className="text-lg font-medium leading-snug tracking-tight sm:text-xl">

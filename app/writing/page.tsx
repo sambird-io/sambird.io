@@ -1,14 +1,14 @@
-import type { Metadata } from "next";
 import { PageHeader } from "@/components/page-header";
 import { PostCard } from "@/components/post-card";
 import { getAllPosts } from "@/lib/posts";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Writing",
   description:
     "Writing on cloud, platform and data engineering: Kubernetes, Terraform, RAG, CI/CD and the lessons in between.",
-  alternates: { canonical: "/writing" },
-};
+  path: "/writing",
+});
 
 export default function WritingPage() {
   const posts = getAllPosts();

@@ -33,7 +33,7 @@ test("navigation exposes the current page and opens every primary destination", 
   await page.goto("/");
   await expect(page.getByRole("banner").getByRole("link", { name: /Sam Bird/ })).toBeVisible();
 
-  for (const label of ["Projects", "Writing", "About", "Speaking", "Contact"]) {
+  for (const label of ["Projects", "Writing", "About", "Speaking", "Uses", "Contact"]) {
     if (isMobile) await page.getByRole("button", { name: "Open menu", exact: true }).click();
     const link = page.getByRole("banner").getByRole("link", { name: label, exact: true }).filter({ visible: true });
     await link.click();
@@ -44,6 +44,10 @@ test("navigation exposes the current page and opens every primary destination", 
     }
     await expect(link).toHaveAttribute("aria-current", "page");
     if (isMobile) await page.getByRole("button", { name: "Close menu", exact: true }).click();
+  }
+
+  for (const label of ["Speaking", "Uses"]) {
+    await expect(page.getByRole("contentinfo").getByRole("link", { name: label, exact: true })).toBeVisible();
   }
 });
 
@@ -62,15 +66,19 @@ test("mobile menu closes with Escape and restores keyboard focus", async ({ page
 test("theme choice survives navigation and reload", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("html")).toHaveClass(/\blight\b/);
-  await page.getByRole("button", { name: "Toggle color theme", exact: true }).click();
+  const themeToggle = page.getByRole("button", { name: "Dark theme", exact: true });
+  await expect(themeToggle).toHaveAttribute("aria-pressed", "false");
+  await themeToggle.click();
   await expect(page.locator("html")).toHaveClass(/\bdark\b/);
+  await expect(themeToggle).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("main").locator('a[href="/projects"]').first().click();
   await expect(page).toHaveURL(/\/projects$/);
   await expect(page.locator("html")).toHaveClass(/\bdark\b/);
   await page.reload();
   await expect(page.locator("html")).toHaveClass(/\bdark\b/);
-  await page.getByRole("button", { name: "Toggle color theme", exact: true }).click();
+  await themeToggle.click();
   await expect(page.locator("html")).toHaveClass(/\blight\b/);
+  await expect(themeToggle).toHaveAttribute("aria-pressed", "false");
   await page.reload();
   await expect(page.locator("html")).toHaveClass(/\blight\b/);
 });
@@ -100,6 +108,52 @@ test("flagship case study can be opened and returned to the project index", asyn
   for (const project of projects) {
     await expect(page.getByRole("main").locator(`a[href="/projects/${project.slug}"]`)).toBeVisible();
   }
+});
+
+test("the homepage leads to measured professional impact and its source", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto("/");
+  await page.getByRole("link", { name: "See selected impact" }).click();
+  await expect(page).toHaveURL(/#selected-impact$/);
+  const impact = page.getByRole("region", { name: "Selected impact" });
+  await expect(impact).toBeInViewport();
+  for (const metric of ["4h → 2h", "½ day → <30 min", "1 week → <5 min"]) {
+    await expect(impact).toContainText(metric);
+  }
+  await impact.locator('a[href="/projects/terraform-pipeline-performance"]').click();
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Halving a Terraform Provisioning Pipeline");
+  for (const heading of ["The constraint", "The decision", "The result"]) {
+    await expect(page.getByRole("heading", { name: heading, exact: true })).toBeVisible();
+  }
+  await expect(page.getByRole("main")).toContainText("Senior DevOps Consultant · Publicis Sapient");
+  await page.getByRole("link", { name: "Read the full Terraform pipeline story" }).click();
+  await expect(page).toHaveURL(/\/writing\/terraform-pipeline-4h-to-2h$/);
+});
+
+test("impact links land on the matching experience evidence", async ({ page }) => {
+  for (const [anchor, outcome] of [
+    ["ibm", "under 30 minutes"],
+    ["john-lewis", "under 5 minutes"],
+  ]) {
+    await page.goto("/");
+    await page.locator(`#selected-impact a[href="/about#${anchor}"]`).click();
+    await expect(page).toHaveURL(new RegExp(`/about#${anchor}$`));
+    const experience = page.locator(`#${anchor}`);
+    await expect(experience).toBeInViewport();
+    await expect(experience).toContainText(outcome);
+  }
+});
+
+test("projects distinguish production work from runnable independent builds", async ({ page }) => {
+  await page.goto("/projects");
+  const professional = page.getByRole("region", { name: "Professional impact" });
+  const independent = page.getByRole("region", { name: "Independent builds" });
+  await expect(professional.locator('a[href="/projects/terraform-pipeline-performance"]')).toBeVisible();
+  await expect(independent.locator('a[href="/projects/inside-the-kubernetes-cluster"]')).toBeVisible();
+  await independent.locator('a[href="/projects/inside-the-kubernetes-cluster"]').click();
+  await expect(page.getByRole("heading", { name: "Architecture" })).toBeVisible();
+  await expect(page.getByText("make demo-all VERSION=v1", { exact: true })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Run the local demo" })).toHaveAttribute("href", /github\.com\/sambird-io\/inside-the-k8s-cluster/);
 });
 
 test("readers can open an article and return to all writing", async ({ page }) => {

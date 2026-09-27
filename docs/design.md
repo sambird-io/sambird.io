@@ -1,14 +1,17 @@
 # Design direction
 
 The portfolio introduces Sam with a centered “Hi, I’m Sam” hero, a concise
-description, and clear links to projects, writing and contact. A soft blue glow
-and rounded calls to action add warmth without crowding the content. Employer
-logos and three areas of focus lead into the selected projects and writing.
+description, and one action leading to three measured career outcomes. A soft
+blue glow and rounded call to action add warmth without crowding the content.
+Employer logos and three areas of focus follow the impact evidence, then
+selected work and writing.
 
-The projects and writing indexes use simple, ruled text rows. About, Speaking,
-Uses and Contact share a consistent page header and readable list treatment.
-Case studies explain the problem, approach and result; the Kubernetes case
-study keeps its diagram because it explains the system.
+The projects index separates professional impact from independent solo and
+reference builds. Projects and writing use simple, ruled text rows. About,
+Speaking, Uses and Contact share a consistent page header and readable list
+treatment. Case studies explain the constraint or problem, decision or
+approach, and result; the Kubernetes case keeps its diagram because it
+explains the system and now links to runnable source evidence.
 
 Design references:
 

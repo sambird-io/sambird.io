@@ -1,16 +1,16 @@
-import type { Metadata } from "next";
 import { About } from "@/components/sections/about";
 import { Experience } from "@/components/sections/experience";
 import { Skills } from "@/components/sections/skills";
 import { Certifications } from "@/components/sections/certifications";
 import { Beyond } from "@/components/sections/beyond";
-import { site } from "@/lib/content";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "About",
-  description: site.tagline,
-  alternates: { canonical: "/about" },
-};
+  description:
+    "Sam Bird's cloud and platform engineering experience across financial services, the public sector and retail, plus technical skills and current focus.",
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

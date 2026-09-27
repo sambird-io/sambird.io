@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
 import { SiteLink as Link } from "@/components/site-link";
 import { PageHeader } from "@/components/page-header";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Uses",
   description:
     "The tools Sam Bird uses for cloud and platform engineering, all installed by a single, tested bootstrap script.",
-  alternates: { canonical: "/uses" },
-};
+  path: "/uses",
+});
 
 const groups = [
   { title: "Package manager", items: ["Homebrew"] },

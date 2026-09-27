@@ -1,20 +1,20 @@
-import type { Metadata } from "next";
 import { SiteLink as Link } from "@/components/site-link";
 import { PageHeader } from "@/components/page-header";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Speaking",
   description:
     "Talks and teaching by Sam Bird, including Google Cloud Summit London, Kubernetes internals, CI/CD and platform engineering.",
-  alternates: { canonical: "/speaking" },
-};
+  path: "/speaking",
+});
 
 const talks = [
   {
     title: "Inside the Kubernetes Cluster",
-    context: "Interactive talk / Live demo",
-    period: "2026",
-    body: "A walk through the Kubernetes control plane using a real-time dashboard I built. Apply a manifest and the room watches the scheduler and controllers react live, turning an invisible system into something you can point at.",
+    context: "Available talk / Live demo",
+    period: "Available to present",
+    body: "An interactive talk I can present using a real-time dashboard I built. Apply a manifest and watch the scheduler and controllers react live, turning an invisible system into something you can point at.",
     href: "/projects/inside-the-kubernetes-cluster",
     linkLabel: "Explore the teaching demo",
   },

@@ -9,12 +9,14 @@ export const site = {
   company: "Lloyds Banking Group",
   tagline:
     "Cloud, data and platform engineer with 7+ years turning manual, fragile systems into automated platforms across financial services, public sector, and retail.",
-  bio: "I'm a Lead Cloud Engineer with more than seven years designing, automating, and operating cloud-native platforms across financial services, the public sector, and retail. Today I lead cloud engineering on a financial-crime intelligence data platform at Lloyds Banking Group. I'm AWS and Google Cloud certified, and I work deep in Kubernetes, Terraform and Python. Lately I've been getting curious about the data and AI tooling built on top, learning how retrieval and evaluation systems work by building small ones from scratch. I like turning repetitive, manual work into reliable automation, mentoring engineers, and explaining complex systems clearly to technical and non-technical people alike. Clients I've supported include Lloyds Banking Group, the UK Home Office, and the John Lewis Partnership.",
+  bio: "I'm a Lead Cloud Engineer with more than seven years designing, automating, and operating cloud-native platforms across financial services, the public sector, and retail. Today I lead cloud engineering on a financial-crime intelligence data platform at Lloyds Banking Group. I work deep in Kubernetes, Terraform and Python. Lately I've been getting curious about the data and AI tooling built on top, learning how retrieval and evaluation systems work by building small ones from scratch. I like turning repetitive, manual work into reliable automation, mentoring engineers, and explaining complex systems clearly to technical and non-technical people alike. Clients I've supported include Lloyds Banking Group, the UK Home Office, and the John Lewis Partnership.",
   location: "Yorkshire, United Kingdom",
   url: "https://sambird.io",
   email: "sam.birdd@hotmail.co.uk",
   headline: "Making complex systems work. Simply.",
   introduction: "I’m Sam, a cloud and platform engineer turning complicated infrastructure into reliable systems that people can build on.",
+  heroSummary:
+    "I build cloud and data platforms that teams can rely on. Today I lead cloud engineering on a financial-crime intelligence data platform at Lloyds Banking Group.",
   // A soft, non-desperate signal. Shown on /about and /contact.
   availability:
     "Open to conversations about senior and staff platform, cloud and data engineering roles. UK-based and remote-friendly.",
@@ -29,6 +31,36 @@ export const site = {
     github: "https://github.com/sambird-io",
   },
 } as const;
+
+// Career outcomes already documented in the experience history below. Keep
+// these in sync with those entries and with the linked public case study.
+export type SelectedImpact = {
+  metric: string;
+  label: string;
+  context: string;
+  href: string;
+};
+
+export const selectedImpact: SelectedImpact[] = [
+  {
+    metric: "4h → 2h",
+    label: "Environment provisioning",
+    context: "Terraform pipeline · Publicis Sapient",
+    href: "/projects/terraform-pipeline-performance",
+  },
+  {
+    metric: "½ day → <30 min",
+    label: "Release deployments",
+    context: "National Law Enforcement Data Programme · IBM",
+    href: "/about#ibm",
+  },
+  {
+    metric: "1 week → <5 min",
+    label: "Platform onboarding",
+    context: "Google Group creation · John Lewis & Partners",
+    href: "/about#john-lewis",
+  },
+];
 
 // What I want to be known for. Each pillar links somewhere that proves it.
 export type Pillar = {
@@ -56,6 +88,7 @@ export const pillars: Pillar[] = [
 ];
 
 export type Experience = {
+  id: string;
   company: string;
   role: string;
   period: string;
@@ -66,6 +99,7 @@ export type Experience = {
 
 export const experience: Experience[] = [
   {
+    id: "lloyds",
     company: "Lloyds Banking Group",
     role: "Lead Cloud Engineer",
     period: "Nov 2023 to Present",
@@ -79,6 +113,7 @@ export const experience: Experience[] = [
     ],
   },
   {
+    id: "publicis-sapient",
     company: "Publicis Sapient",
     role: "Senior DevOps Consultant",
     period: "Apr 2022 to Nov 2023",
@@ -92,6 +127,7 @@ export const experience: Experience[] = [
     ],
   },
   {
+    id: "ibm",
     company: "IBM",
     role: "DevOps Consultant → Senior DevOps Consultant",
     period: "Mar 2019 to Apr 2022",
@@ -105,6 +141,7 @@ export const experience: Experience[] = [
     ],
   },
   {
+    id: "john-lewis",
     company: "John Lewis & Partners",
     role: "Technology Graduate",
     period: "Sep 2016 to Mar 2019",
@@ -117,6 +154,7 @@ export const experience: Experience[] = [
     ],
   },
   {
+    id: "sage",
     company: "Sage",
     role: "Undergraduate Software Engineer",
     period: "Sep 2014 to Aug 2015",
@@ -161,15 +199,12 @@ export const skills: SkillGroup[] = [
   },
 ];
 
-// Truthful, generic. The site already states AWS + GCP certified. Specific
-// titles / Credly links can be slotted in later via `url`.
+// Add only current credentials whose exact title and public verification are
+// known. An expired certification must not be presented as current.
 export type Certification = {
   name: string;
   issuer: string;
   url?: string;
 };
 
-export const certifications: Certification[] = [
-  { name: "AWS Certified", issuer: "Amazon Web Services" },
-  { name: "Google Cloud Certified", issuer: "Google Cloud" },
-];
+export const certifications: Certification[] = [];

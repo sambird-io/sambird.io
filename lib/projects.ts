@@ -7,8 +7,10 @@ export type Project = {
   title: string;
   tagline: string;
   year: string;
-  // One-word role context, e.g. "Solo project" or "Client work".
+  category: "professional" | "independent";
+  // How the work was carried out, e.g. "Solo project" or "Professional work".
   context: string;
+  role?: string;
   stack: string[];
   competencies: string[];
   // Case-study body. Plain prose, kept honest and free of confidential detail.
@@ -17,6 +19,11 @@ export type Project = {
   result: string;
   // Short bullets surfaced on cards and detail pages.
   highlights: string[];
+  // Additional, source-backed reasoning and implementation detail.
+  detailSections?: { heading: string; body: string }[];
+  runCommands?: string[];
+  evidenceLinks?: { label: string; href: string }[];
+  relatedWriting?: { label: string; href: string };
   repo?: string;
   demo?: string;
   featured: boolean;
@@ -24,11 +31,45 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "terraform-pipeline-performance",
+    title: "Halving a Terraform Provisioning Pipeline",
+    tagline:
+      "From four hours to two by measuring bottlenecks and simplifying the delivery path.",
+    year: "2022–2023",
+    category: "professional",
+    context: "Professional work",
+    role: "Senior DevOps Consultant · Publicis Sapient",
+    stack: ["Terraform", "CI/CD", "Infrastructure as Code"],
+    competencies: [
+      "Platform Engineering",
+      "Infrastructure as Code",
+      "Performance analysis",
+      "CI/CD",
+    ],
+    problem:
+      "An environment-provisioning pipeline took four hours to run. The Platform Engineering team needed to understand where the time went before making changes that would keep it fast as it grew.",
+    approach:
+      "I measured stage timings and expensive calls first. The timeline exposed independent modules running in sequence, repeated provider and module downloads, and slow cloud resources blocking other work. I then parallelised work without shared dependencies, cached repeated downloads, and scoped state and applies to reduce unnecessary work.",
+    result:
+      "Pipeline runtime fell from four hours to two. I documented the bottlenecks and the reasoning behind the changes so the Platform Engineering team could keep tracking performance as the pipeline evolved.",
+    highlights: [
+      "Provisioning runtime reduced from 4 hours to 2",
+      "Measured stage timings before changing the pipeline",
+      "Parallel work, caching and smaller applies addressed the measured bottlenecks",
+    ],
+    relatedWriting: {
+      label: "Read the full Terraform pipeline story",
+      href: "/writing/terraform-pipeline-4h-to-2h",
+    },
+    featured: true,
+  },
+  {
     slug: "inside-the-kubernetes-cluster",
     title: "Inside the Kubernetes Cluster",
     tagline:
-      "A live, projector-friendly view of the control plane reacting in real time.",
+      "A local teaching dashboard for watching Kubernetes resources reconcile in real time.",
     year: "2026",
+    category: "independent",
     context: "Solo project",
     stack: [
       "Next.js",
@@ -48,13 +89,46 @@ export const projects: Project[] = [
     problem:
       "Kubernetes' control plane is mostly invisible. When you run kubectl apply, the API server, scheduler and controllers do a lot of work you never see, which makes the system hard to teach and hard to reason about under pressure.",
     approach:
-      "I built a local-first dashboard that streams cluster state over Server-Sent Events from a FastAPI backend using the Kubernetes Python client, with a Next.js front end. Apply a manifest and you watch the scheduler place pods, controllers reconcile, and replicas converge, live, on a single screen.",
+      "I built a local-first dashboard backed by a kind cluster. FastAPI uses the Kubernetes Python client to watch workload state and stream snapshots over Server-Sent Events to a Next.js interface. Live pod placement, ownership, readiness and replica counts sit beside clearly labelled conceptual explanations of scheduler and controller behaviour.",
     result:
-      "A reliable, reproducible teaching tool that runs on a laptop against a kind cluster and is robust enough to drive a live talk. The repo ships with setup, architecture notes, a presentation guide and a rehearsal checklist, so anyone can pick it up and run the session.",
+      "A repeatable teaching tool that runs locally against a kind cluster. The repo includes one-command setup, architecture notes, a 30-minute presentation guide, a rehearsal checklist and API smoke tests for anyone who wants to run the demo.",
     highlights: [
-      "Real-time control-plane state streamed over SSE",
-      "Next.js + FastAPI, local-first against a kind cluster",
-      "Documented well enough to drive a live conference talk",
+      "Live Kubernetes resource state streamed to the dashboard over SSE",
+      "Four-layer architecture: kind, demo workload, FastAPI and Next.js",
+      "One-command local setup plus rehearsal and smoke checks",
+    ],
+    detailSections: [
+      {
+        heading: "Architecture",
+        body: "A local kind cluster runs one control-plane and two worker nodes. A small HTTP workload exposes pod identity and readiness. FastAPI watches Kubernetes resources and serves initial state, live SSE updates and namespace-scoped actions. Next.js separates live demo controls from a teaching view; conceptual control-plane cards are explicitly distinguished from discovered cluster data.",
+      },
+      {
+        heading: "Run and verify",
+        body: "With Docker, kubectl, kind, make, Node.js and Python installed, the one-command setup creates the cluster, deploys the workload and starts both services. Automated rehearsal and API smoke checks help verify the session; the setup guide also documents reset and teardown.",
+      },
+    ],
+    runCommands: [
+      "make demo-all VERSION=v1",
+      "make rehearsal-check",
+      "make smoke-test",
+    ],
+    relatedWriting: {
+      label: "Read how kubectl apply works",
+      href: "/writing/what-happens-when-you-kubectl-apply",
+    },
+    evidenceLinks: [
+      {
+        label: "Architecture and data flow",
+        href: "https://github.com/sambird-io/inside-the-k8s-cluster/blob/main/docs/architecture.md",
+      },
+      {
+        label: "Run the local demo",
+        href: "https://github.com/sambird-io/inside-the-k8s-cluster/blob/main/docs/setup.md",
+      },
+      {
+        label: "Rehearsal checks",
+        href: "https://github.com/sambird-io/inside-the-k8s-cluster/blob/main/docs/rehearsal-checklist.md",
+      },
     ],
     repo: "https://github.com/sambird-io/inside-the-k8s-cluster",
     featured: true,
@@ -65,6 +139,7 @@ export const projects: Project[] = [
     tagline:
       "A learning project: retrieval-augmented generation built from scratch, with evals to show where it fails.",
     year: "2025",
+    category: "independent",
     context: "Solo project",
     stack: [
       "Python",
@@ -100,6 +175,7 @@ export const projects: Project[] = [
     tagline:
       "Reusable VPC, GKE and IAM modules and a multi-environment delivery pattern teams can self-serve.",
     year: "2023",
+    category: "independent",
     context: "Reference build",
     stack: ["Terraform", "Google Cloud", "GKE", "Shared VPC", "Jenkins"],
     competencies: [
@@ -129,6 +205,7 @@ export const projects: Project[] = [
     tagline:
       "An idempotent, tested bootstrap that rebuilds a full cloud-engineering setup from zero.",
     year: "2025",
+    category: "independent",
     context: "Solo project",
     stack: [
       "Bash",
@@ -159,6 +236,7 @@ export const projects: Project[] = [
     tagline:
       "An end-to-end Jenkins pipeline: build, test, scan, containerise and deploy with Helm.",
     year: "2023",
+    category: "independent",
     context: "Reference build",
     stack: [
       "Jenkins",
