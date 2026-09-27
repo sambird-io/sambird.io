@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { getProject, projects } from "@/lib/projects";
 import { site } from "@/lib/content";
+import { pageMetadata } from "@/lib/metadata";
 import { GithubIcon } from "@/components/icons";
 import { ClusterDiagram } from "@/components/cluster-diagram";
 
@@ -21,24 +22,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return {};
-  return {
+  return pageMetadata({
     title: project.title,
     description: project.tagline,
-    alternates: { canonical: `/projects/${project.slug}` },
-    openGraph: {
-      title: `${project.title} · ${site.name}`,
-      description: project.tagline,
-      url: `${site.url}/projects/${project.slug}`,
-      type: "article",
-    },
-  };
+    path: `/projects/${project.slug}`,
+    type: "article",
+  });
 }
-
-const sections = [
-  { key: "problem", label: "The problem" },
-  { key: "approach", label: "The approach" },
-  { key: "result", label: "The result" },
-] as const;
 
 export default async function ProjectPage({
   params,
@@ -48,6 +38,12 @@ export default async function ProjectPage({
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) notFound();
+
+  const sections = [
+    { key: "problem", label: project.category === "professional" ? "The constraint" : "The problem" },
+    { key: "approach", label: project.category === "professional" ? "The decision" : "The approach" },
+    { key: "result", label: "The result" },
+  ] as const;
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -97,19 +93,32 @@ export default async function ProjectPage({
           {project.tagline}
         </p>
 
+        {project.role && (
+          <p className="mt-6 border-l-2 border-accent pl-4 text-sm leading-6 text-muted-foreground">
+            <span className="font-medium text-foreground">My role:</span> {project.role}
+          </p>
+        )}
+
         <p className="mt-5 text-sm leading-6 text-muted-foreground">{project.stack.join(" · ")}</p>
 
-        {project.repo && (
+        {(project.repo || project.relatedWriting) && (
           <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href={project.repo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-link"
-            >
-              <GithubIcon className="h-4 w-4" aria-hidden="true" />
-              View on GitHub
-            </a>
+            {project.repo && (
+              <a
+                href={project.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-link"
+              >
+                <GithubIcon className="h-4 w-4" aria-hidden="true" />
+                View on GitHub
+              </a>
+            )}
+            {project.relatedWriting && (
+              <Link href={project.relatedWriting.href} className="text-link">
+                {project.relatedWriting.label}
+              </Link>
+            )}
           </div>
         )}
 
@@ -127,6 +136,47 @@ export default async function ProjectPage({
               </p>
             </section>
           ))}
+
+          {project.detailSections?.map((section) => (
+            <section key={section.heading} className="grid gap-4 border-t border-border pt-8 sm:grid-cols-[160px_1fr] sm:gap-10">
+              <h2 className="text-sm font-medium text-foreground">
+                {section.heading}
+              </h2>
+              <p className="text-base leading-8 text-muted-foreground">
+                {section.body}
+              </p>
+            </section>
+          ))}
+
+          {project.runCommands && (
+            <section className="grid gap-4 border-t border-border pt-8 sm:grid-cols-[160px_1fr] sm:gap-10">
+              <h2 className="text-sm font-medium text-foreground">Run locally</h2>
+              <ul className="min-w-0 space-y-2">
+                {project.runCommands.map((command) => (
+                  <li key={command}>
+                    <code className="block overflow-x-auto rounded-lg bg-surface px-4 py-3 font-mono text-sm text-foreground">
+                      {command}
+                    </code>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {project.evidenceLinks && (
+            <section className="grid gap-4 border-t border-border pt-8 sm:grid-cols-[160px_1fr] sm:gap-10">
+              <h2 className="text-sm font-medium text-foreground">Source and setup</h2>
+              <ul className="space-y-2">
+                {project.evidenceLinks.map((evidence) => (
+                  <li key={evidence.href}>
+                    <a href={evidence.href} target="_blank" rel="noopener noreferrer" className="text-link">
+                      {evidence.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           <section>
             <h2 className="text-sm font-medium text-foreground">

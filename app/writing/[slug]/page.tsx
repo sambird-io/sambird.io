@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { getAllPosts, getPost, formatDate } from "@/lib/posts";
 import { site } from "@/lib/content";
+import { pageMetadata } from "@/lib/metadata";
 
 export function generateStaticParams() {
   return getAllPosts().map((post) => ({ slug: post.slug }));
@@ -19,18 +20,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return {};
-  return {
+  return pageMetadata({
     title: post.title,
     description: post.summary,
-    alternates: { canonical: `/writing/${post.slug}` },
-    openGraph: {
-      title: `${post.title} · ${site.name}`,
-      description: post.summary,
-      url: `${site.url}/writing/${post.slug}`,
-      type: "article",
-      publishedTime: post.date,
-    },
-  };
+    path: `/writing/${post.slug}`,
+    type: "article",
+    publishedTime: post.date,
+  });
 }
 
 export default async function PostPage({

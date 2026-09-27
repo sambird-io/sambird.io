@@ -11,7 +11,7 @@ for (const theme of ["light", "dark"]) {
       }, theme);
       await page.goto(route);
       await expect(page.locator("html")).toHaveClass(new RegExp(`\\b${theme}\\b`));
-      await expect(page.getByRole("button", { name: "Toggle color theme", exact: true })).toBeVisible();
+      await expect(page.getByRole("button", { name: "Dark theme", exact: true })).toHaveAttribute("aria-pressed", String(theme === "dark"));
       const results = await new AxeBuilder({ page })
         .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
         .analyze();

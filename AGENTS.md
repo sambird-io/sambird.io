@@ -16,15 +16,19 @@ Next.js 16 + Tailwind v4, light/dark themes, deployed as a standalone Docker ima
 The visual direction and research are documented in `docs/design.md`.
 
 ## Content lives in `lib/content.ts` (single source of truth)
-Most changes are data edits here, not component changes. The hero badge, `<title>`,
-and all OpenGraph/SEO metadata (`app/layout.tsx`) derive from `site`, so they update
-automatically.
-- `site` — `name, role, company, tagline, bio, location, email, links{linkedin,github}`.
+Most identity and career changes are data edits here, not component changes. The
+hero badge and root metadata (`app/layout.tsx`) derive from `site`; route-specific
+Open Graph and Twitter fields use `lib/metadata.ts`.
+- `site` — `name, role, company, tagline, bio, heroSummary, location, email,
+  links{linkedin,github}`.
   Current positioning: **Lead Cloud Engineer @ Lloyds Banking Group**, focused on
   cloud and data platforms in regulated financial services (Yorkshire, UK).
-- `experience[]` — most-recent-first; each `{company, role, period, logo, logoAlt,
+- `experience[]` — most-recent-first; each `{id, company, role, period, logo, logoAlt,
   bullets[]}`, rendered by `components/sections/experience.tsx` + `timeline-item.tsx`.
-  The list keys on `company-role-period`, so those three together must stay unique.
+  The list keys on `company-role-period`, so those three together must stay unique;
+  `id` is the stable anchor for direct links to an outcome.
+- `selectedImpact[]` — three measured career outcomes shown directly below the
+  homepage hero; keep each one aligned with its experience entry and source link.
 - `skills[]` — groups of `{title, skills[]}`.
 - `lib/projects.ts` — project metadata and problem/approach/result case studies.
 - `lib/posts.ts` — article metadata; bodies live in `content/writing/<slug>.mdx`.
@@ -39,7 +43,8 @@ automatically.
   then verify with `file`.
 - **Skills** → edit `skills[]` groups; keep to Sam's real toolchain.
 - **Projects / writing** → update the relevant metadata and MDX files. Keep article
-  slugs aligned. Only publish work already public or cleared for external sharing.
+  slugs aligned. Label professional and independent work accurately. Only publish
+  work already public or cleared for external sharing.
 
 ## Editorial rules (do not break)
 - **Accuracy over polish** — every claim must be true. The old site shipped fake stats
